@@ -5,39 +5,53 @@
 package presentacion;
 import datos.XML;
 import java.util.Scanner;
+import negocio.Cliente;
+import negocio.Cuenta;
 public class Tarea1TamaraMariaJose {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        XML xml = new XML();
-
+        Cliente cliente =new Cliente();
+        Cuenta cuenta = new Cuenta();
         while (true) {
-            System.out.println("Bienvenido al sistema de depósitos bancarios");
+            System.out.println("Bienvenido al sistema de depï¿½sitos bancarios");
             System.out.println("1. Crear Usuario");
             System.out.println("2. Crear Cuenta");
             System.out.println("3. Modificar Cliente");
-            System.out.println("4. Realizar una Transacción");
+            System.out.println("4. Realizar una Transacciï¿½n");
             System.out.println("5. Realizar un Traslado de Fondos");
             System.out.println("6. Generar Reportes");
             System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opciï¿½n: ");
             
             int opcion = scanner.nextInt();
             scanner.nextLine(); 
             
             switch (opcion) {
                 case 1:
-                    //  Crer Usuario
+                   System.out.print("Digite su nombre"); 
+                   String nom=scanner.nextLine();
+                   System.out.print("Digite su identificaciÃ³n");
+                   String id=scanner.nextLine();
+                   System.out.print("Digite su telefono");
+                   String tel =scanner.nextLine();
+                   cliente.agregarClientesC(nom,id,tel);
                     break;
                 case 2:
-                   //crear cuentas 
+                   System.out.print("Digite su numero de cuenta:"); 
+                   String num=scanner.nextLine();
+                   System.out.print("Digite su tipo:");
+                   String tipo =scanner.nextLine();
+                   System.out.print("Digite su nombre:");
+                   String no =scanner.nextLine();
+                   cuenta.agregarCuentaC(num,tipo,no);
                     break;
                 case 3:
                     // modificar clientes
                     break;
                 case 4:
-                    // realizar una transacción
+                    // realizar una transacciï¿½n
                     break;
                 case 5:
                     //  realizar un traslado de fondos
@@ -50,7 +64,7 @@ public class Tarea1TamaraMariaJose {
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("Opción no válida. Intente de nuevo.");
+                    System.out.println("Opciï¿½n no vï¿½lida. Intente de nuevo.");
             }
         
     }

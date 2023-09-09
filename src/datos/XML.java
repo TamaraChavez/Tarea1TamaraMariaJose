@@ -38,7 +38,7 @@ public class XML {
              Transformer transformer = transformerFactory.newTransformer();
              DOMSource source = new DOMSource(documento);
              StreamResult result= new StreamResult(new File(strRuta));
-             
+             transformer.transform(source, result);
          }catch(Exception ex)
          {
            ex.printStackTrace(); 
@@ -51,7 +51,14 @@ public class XML {
          try
          {
              File archivo = new File(strRuta);
-             return archivo.exists();
+             if (archivo.exists())
+             {
+              System.out.println("éxito");
+             return true;
+             }else{
+                 System.out.println("Se acaba de crear el archivo");
+                 return false;
+                 }
          }catch (Exception ex)
          {
              ex.printStackTrace();
@@ -59,21 +66,6 @@ public class XML {
          }
     }
     
-    public DefaultTableModel TablaClientes()
-    {
-        try {
-            DefaultTableModel dTable = new DefaultTableModel();
-            
-            // Agregar columnas a la tabla
-            dTable.addColumn("Identificacion");
-            dTable.addColumn("Nombre");
-            dTable.addColumn("Telefono");
-            
-            return dTable;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
     
 }
