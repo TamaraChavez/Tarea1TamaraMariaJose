@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package negocio;
-
+import javax.swing.table.DefaultTableModel;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -11,46 +11,46 @@ import java.io.*;
 import datos.XML;
 
 public class Cliente {
-    String identificacion;
-    String nombre;
-    String telefono;
+    String _identificacion;
+    String _nombre;
+    String _telefono;
 
     
 //constructor
     
-    public Cliente(String identificacion, String nombre, String telefono) {
-        this.identificacion = identificacion;
-        this.nombre = nombre;
-        this.telefono = telefono;
+    public Cliente(String _identificacion, String _nombre, String _telefono) {
+        this._identificacion = _identificacion;
+        this._nombre = _nombre;
+        this._telefono = _telefono;
 
     }
     
 //propiedades getters
     public String getIdentificaicion() {
-        return identificacion;
+        return _identificacion;
     }
 
     public String getNombre() {
-        return nombre;
+        return _nombre;
     }
 
     public String getTelefono() {
-        return telefono;
+        return _telefono;
     }
 
 
    //propiedades setters
 
     public void setIdentificaicion(String _identificaicion) {
-        this.identificacion = _identificaicion;
+        this._identificacion = _identificaicion;
     }
 
     public void setNombre(String _nombre) {
-        this.nombre = _nombre;
+        this._nombre = _nombre;
     }
 
     public void setTelefono(String _telefono) {
-        this.telefono = _telefono;
+        this._telefono = _telefono;
     }
 
 
@@ -67,15 +67,15 @@ public class Cliente {
                     Element cliente= documento.createElement("Cliente");
                         
                     Element nodoIdentificacion = documento.createElement("Identificacion");
-                    nodoIdentificacion.appendChild(documento.createTextNode(identificacion));
+                    nodoIdentificacion.appendChild(documento.createTextNode(_identificacion));
                     cliente.appendChild(nodoIdentificacion);
                       
                     Element nodoNombre = documento.createElement("Nombre");
-                    nodoNombre.appendChild(documento.createTextNode(nombre));
+                    nodoNombre.appendChild(documento.createTextNode(_nombre));
                     cliente.appendChild(nodoNombre);
                         
                     Element nodoTelefono = documento.createElement("Telefono");
-                    nodoTelefono.appendChild(documento.createTextNode(telefono));
+                    nodoTelefono.appendChild(documento.createTextNode(_telefono));
                     cliente.appendChild(nodoTelefono);
                         
                     NodeList clientes = documento.getElementsByTagName("Clientes");
@@ -97,15 +97,15 @@ public class Cliente {
                     Element cliente = documento.createElement("Cliente");
                     
                     Element nodoIdentificacion = documento.createElement("Identificacion");
-                    nodoIdentificacion.appendChild(documento.createTextNode(identificacion));
+                    nodoIdentificacion.appendChild(documento.createTextNode(_identificacion));
                     cliente.appendChild(nodoIdentificacion);
                       
                     Element nodoNombre = documento.createElement("Nombre");
-                    nodoNombre.appendChild(documento.createTextNode(nombre));
+                    nodoNombre.appendChild(documento.createTextNode(_nombre));
                     cliente.appendChild(nodoNombre);
                         
                     Element nodoTelefono = documento.createElement("Telefono");
-                    nodoTelefono.appendChild(documento.createTextNode(telefono));
+                    nodoTelefono.appendChild(documento.createTextNode(_telefono));
                     cliente.appendChild(nodoTelefono);
                     
                     clientes.appendChild(cliente);
@@ -118,6 +118,72 @@ public class Cliente {
                 e.printStackTrace();
             }
     }
+    
+    public DefaultTableModel leerClientesXml()
+    {
+        try
+        {
+            XML iDatos = new XML();
+            DefaultTableModel dTable= iDatos.TablaClientes();
+            String fileXml = "Clientes.xml";
+            if (iDatos.ValidarXml(fileXml))
+            {
+                Document archivoXml = iDatos.LeerXML(fileXml);
+                NodeList listaXml = archivoXml.getElementsByTagName(fileXml);
+                for (int i = 0; i < listaXml.getLength(); i++) 
+                {
+                    Node nodo = listaXml.item(i);
+                    if (nodo.getNodeType() == Node.ELEMENT_NODE) 
+                    {
+                        Element elemento = (Element) nodo;
+                        String identificacion = elemento.getElementsByTagName("Identificacion").item(0).getTextContent();
+                        String nombre = elemento.getElementsByTagName("Nombre").item(0).getTextContent();
+                        String telefono= elemento.getElementsByTagName("Telefono").item(0).getTextContent();
+                        Object[] fila = {identificacion, nombre, telefono};
+                        dTable.addRow(fila);
+                    }
+                }
+            }
+            return dTable;
+        }catch(Exception e)
+        { 
+            e.printStackTrace();
+            return null;
+        }   
+    }
+    
+    public boolean validarDuplicadosClientes() 
+    {
+        try 
+        {
+            XML iDatos = new XML();
+            String fileXml = "Clientes.xml";
+            // Revisar si el archivo XML existe
+            if (iDatos.ValidarXml(fileXml)) {
+                Document archivoXml = iDatos.LeerXML(fileXml);
+                NodeList listaXml = archivoXml.getElementsByTagName(fileXml);
+                for (int i = 0; i < listaXml.getLength(); i++) {
+                    Node nodo = listaXml.item(i);
+                    if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                        Element elemento = (Element) nodo;
+                        String identificacion = elemento.getElementsByTagName("Identificacion").item(0).getTextContent();
+                        String nombre = elemento.getElementsByTagName("Nombre").item(0).getTextContent();
+                        String telefono = elemento.getElementsByTagName("Telefono").item(0).getTextContent();
+
+                        if (identificacion.equals(getIdentificaicion()) ||
+                            nombre.equals(getNombre()) ||    
+                            telefono.equals(getTelefono())) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+}
     
     
     

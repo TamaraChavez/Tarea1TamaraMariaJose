@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import javax.swing.table.DefaultTableModel;
 
 
 //leer documento xml
@@ -58,5 +59,21 @@ public class XML {
          }
     }
     
+    public DefaultTableModel TablaClientes()
+    {
+        try {
+            DefaultTableModel dTable = new DefaultTableModel();
+            
+            // Agregar columnas a la tabla
+            dTable.addColumn("Identificacion");
+            dTable.addColumn("Nombre");
+            dTable.addColumn("Telefono");
+            
+            return dTable;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
 }
