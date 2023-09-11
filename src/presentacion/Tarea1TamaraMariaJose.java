@@ -3,71 +3,122 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package presentacion;
-import datos.XML;
-import java.util.Scanner;
 import negocio.Cliente;
 import negocio.Cuenta;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class Tarea1TamaraMariaJose {
 
-    public static void main(String[] args) {
+    private JTextField nombreField;
+    private JTextField identificacionField;
+    private JTextField telefonoField;
+    private JTextField numCuentaField;
+    private JTextField tipoCuentaField;
+    private JTextField propietarioField;
+    private JTextArea outputArea;
 
-        Scanner scanner = new Scanner(System.in);
-        Cliente cliente =new Cliente();
-        Cuenta cuenta = new Cuenta();
-        while (true) {
-            System.out.println("Bienvenido al sistema de dep�sitos bancarios");
-            System.out.println("1. Crear Usuario");
-            System.out.println("2. Crear Cuenta");
-            System.out.println("3. Modificar Cliente");
-            System.out.println("4. Realizar una Transacci�n");
-            System.out.println("5. Realizar un Traslado de Fondos");
-            System.out.println("6. Generar Reportes");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opci�n: ");
-            
-            int opcion = scanner.nextInt();
-            scanner.nextLine(); 
-            
-            switch (opcion) {
-                case 1:
-                   System.out.print("Digite su nombre"); 
-                   String nom=scanner.nextLine();
-                   System.out.print("Digite su identificación");
-                   String id=scanner.nextLine();
-                   System.out.print("Digite su telefono");
-                   String tel =scanner.nextLine();
-                   cliente.agregarClientesC(nom,id,tel);
-                    break;
-                case 2:
-                   System.out.print("Digite su numero de cuenta:"); 
-                   String num=scanner.nextLine();
-                   System.out.print("Digite su tipo:");
-                   String tipo =scanner.nextLine();
-                   System.out.print("Digite su nombre:");
-                   String no =scanner.nextLine();
-                   cuenta.agregarCuentaC(num,tipo,no);
-                    break;
-                case 3:
-                    // modificar clientes
-                    break;
-                case 4:
-                    // realizar una transacci�n
-                    break;
-                case 5:
-                    //  realizar un traslado de fondos
-                    break;
-                case 6:
-                    // generar reportes
-                    break;
-                case 0:
-                    System.out.println("Saliendo del programa...");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Opci�n no v�lida. Intente de nuevo.");
+    private Cliente cliente;
+    private Cuenta cuenta;
+
+    public Tarea1TamaraMariaJose() {
+        JFrame frame = new JFrame("Sistema de Depósitos Bancarios");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(8, 2, 10, 10));
+
+        JLabel nombreLabel = new JLabel("Nombre:");
+        nombreField = new JTextField(20);
+        JLabel identificacionLabel = new JLabel("Identificación:");
+        identificacionField = new JTextField(20);
+        JLabel telefonoLabel = new JLabel("Teléfono:");
+        telefonoField = new JTextField(20);
+
+        JLabel numCuentaLabel = new JLabel("Número de Cuenta:");
+        numCuentaField = new JTextField(20);
+        JLabel tipoCuentaLabel = new JLabel("Tipo de Cuenta:");
+        tipoCuentaField = new JTextField(20);
+        JLabel propietarioLabel = new JLabel("Propietario:");
+        propietarioField = new JTextField(20);
+
+        JButton agregarClienteButton = new JButton("Agregar Cliente");
+        agregarClienteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                agregarCliente();
             }
-        
+        });
+
+        JButton agregarCuentaButton = new JButton("Agregar Cuenta");
+        agregarCuentaButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                agregarCuenta();
+            }
+        });
+
+        outputArea = new JTextArea(10, 40);
+        outputArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
+
+        panel.add(nombreLabel);
+        panel.add(nombreField);
+        panel.add(identificacionLabel);
+        panel.add(identificacionField);
+        panel.add(telefonoLabel);
+        panel.add(telefonoField);
+        panel.add(numCuentaLabel);
+        panel.add(numCuentaField);
+        panel.add(tipoCuentaLabel);
+        panel.add(tipoCuentaField);
+        panel.add(propietarioLabel);
+        panel.add(propietarioField);
+        panel.add(agregarClienteButton);
+        panel.add(agregarCuentaButton);
+
+        frame.add(panel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        cliente = new Cliente();
+        cuenta = new Cuenta();
+
+        frame.setVisible(true);
     }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new Tarea1TamaraMariaJose();
+            }
+        });
+    }
+
+    void agregarCliente() {
+        String nombre = nombreField.getText();
+        String identificacion = identificacionField.getText();
+        String telefono = telefonoField.getText();
+
+        if (!nombre.isEmpty() && !identificacion.isEmpty() && !telefono.isEmpty()) {
+            cliente.agregarClientesC(nombre, identificacion, telefono);
+            outputArea.append("Cliente agregado: " + nombre + "\n");
+        } else {
+            JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos del cliente.");
+        }
+    }
+
+    void agregarCuenta() {
+        String numCuenta = numCuentaField.getText();
+        String tipoCuenta = tipoCuentaField.getText();
+        String propietario = propietarioField.getText();
+
+        if (!numCuenta.isEmpty() && !tipoCuenta.isEmpty() && !propietario.isEmpty()) {
+            cuenta.agregarCuentaC(numCuenta, tipoCuenta, propietario);
+            outputArea.append("Cuenta agregada: " + numCuenta + "\n");
+        } else {
+            JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos de la cuenta.");
+        }
     }
 }
 
