@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package datos;
-
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,35 +11,34 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DatosCuenta{
-    
-
-    public void agregarCuentaXml(String numCuenta, String tipoCuenta, String Propietario) 
+public class DatosTransaccion {
+ 
+    public void agregarTransaccionXml(String numTransaccion, String tipoTransaccion, String numCuenta, Double monto) 
     {
         try {
-                String archivoXml = "Cuentas.xml";
+                String archivoXml = "Transacciones.xml";
                 XML datosXml = new XML();
                 if (datosXml.ValidarXml(archivoXml))
                 //si el archivo ya existe agregar nodos hijos
                 {
                     Document documento = datosXml.LeerXML(archivoXml);
                         
-                    Element cuenta= documento.createElement("Cuenta");
+                    Element transaccion= documento.createElement("Transaccion");
+                        
+                    Element nodoNumTransaccion = documento.createElement("NumeroTransaccion");
+                    nodoNumTransaccion.appendChild(documento.createTextNode(numTransaccion));
+                    transaccion.appendChild(nodoNumTransaccion);
+                      
+                    Element nodoTipoTransaccion= documento.createElement("TipoTransaccion");
+                    nodoTipoTransaccion.appendChild(documento.createTextNode(tipoTransaccion));
+                    transaccion.appendChild(nodoTipoTransaccion);
                         
                     Element nodoNumCuenta = documento.createElement("NumeroCuenta");
                     nodoNumCuenta.appendChild(documento.createTextNode(numCuenta));
-                    cuenta.appendChild(nodoNumCuenta);
-                      
-                    Element nodoTipoCuenta= documento.createElement("TipoCuenta");
-                    nodoTipoCuenta.appendChild(documento.createTextNode(tipoCuenta));
-                    cuenta.appendChild(nodoTipoCuenta);
-                        
-                    Element nodoPropietario = documento.createElement("Propietario");
-                    nodoPropietario.appendChild(documento.createTextNode(Propietario));
-                    cuenta.appendChild(nodoPropietario);
+                    transaccion.appendChild(nodoNumCuenta);
                         
                     NodeList cuentas= documento.getElementsByTagName("Cuentas");
-                    cuentas.item(0).appendChild(cuenta);   
+                    cuentas.item(0).appendChild(transaccion);   
                     
                     datosXml.GuardarXml(archivoXml, documento);
 
@@ -52,24 +50,24 @@ public class DatosCuenta{
                     DocumentBuilder builder = factory.newDocumentBuilder();
                     Document documento = builder.newDocument();
                     
-                    Element cuentas =documento.createElement("Cuentas");
-                    documento.appendChild(cuentas);
+                    Element transacciones =documento.createElement("Transacciones");
+                    documento.appendChild(transacciones);
                     
-                    Element cuenta = documento.createElement("Cuenta");
+                    Element transaccion = documento.createElement("Transaccion");
                     
+                    Element nodoNumTransaccion = documento.createElement("NumeroTransaccion");
+                    nodoNumTransaccion.appendChild(documento.createTextNode(numTransaccion));
+                    transaccion.appendChild(nodoNumTransaccion);
+                      
+                    Element nodoTipoTransaccion= documento.createElement("TipoTransaccion");
+                    nodoTipoTransaccion.appendChild(documento.createTextNode(tipoTransaccion));
+                    transaccion.appendChild(nodoTipoTransaccion);
+                        
                     Element nodoNumCuenta = documento.createElement("NumeroCuenta");
                     nodoNumCuenta.appendChild(documento.createTextNode(numCuenta));
-                    cuenta.appendChild(nodoNumCuenta);
-                      
-                    Element nodoTipoCuenta= documento.createElement("TipoCuenta");
-                    nodoTipoCuenta.appendChild(documento.createTextNode(tipoCuenta));
-                    cuenta.appendChild(nodoTipoCuenta);
-                        
-                    Element nodoPropietario = documento.createElement("Propietario");
-                    nodoPropietario.appendChild(documento.createTextNode(Propietario));
-                    cuenta.appendChild(nodoPropietario);
+                    transaccion.appendChild(nodoNumCuenta);
                     
-                    cuentas.appendChild(cuenta);
+                    transacciones.appendChild(transaccion);
                     datosXml.GuardarXml(archivoXml, documento);
  
                 }
@@ -160,4 +158,5 @@ public class DatosCuenta{
             return null;
         }
     }
+    
 }
