@@ -156,4 +156,37 @@ public class DatosClientes {
             return null;
         }
     }
+    
+        public boolean buscarClientePorId(String id) {
+        try {
+            String archivoXml = "Clientes.xml";
+            XML datosXml = new XML();
+            
+            if (datosXml.ValidarXml(archivoXml)) {
+                Document documento = datosXml.LeerXML(archivoXml);
+                NodeList clientes = documento.getElementsByTagName("Cliente");
+                
+                for (int i = 0; i < clientes.getLength(); i++) {
+                    Node nodo = clientes.item(i);
+                    if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                        Element elemento = (Element) nodo;
+                        String identificacion = elemento.getElementsByTagName("Identificacion").item(0).getTextContent();
+                        
+                        if (identificacion.equalsIgnoreCase(id)) {
+                            // El nombre de usuario existe en el XML
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            // El nombre de usuario no se encontró en el XML
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+
 }
