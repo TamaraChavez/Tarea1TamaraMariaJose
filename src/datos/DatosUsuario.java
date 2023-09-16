@@ -100,8 +100,8 @@ public class DatosUsuario {
                         Element elemento = (Element) nodo;
                         String nomUsuario = elemento.getElementsByTagName("NombreUsuario").item(0).getTextContent();
                         String tipoUsuario= elemento.getElementsByTagName("TipoUsuario").item(0).getTextContent();
-                        String contraseña= elemento.getElementsByTagName("Contraseña").item(0).getTextContent();
-                        Object[] fila = {nomUsuario, tipoUsuario, contraseña};
+                        String contrasena= elemento.getElementsByTagName("Contraseña").item(0).getTextContent();
+                        Object[] fila = {nomUsuario, tipoUsuario, contrasena};
                         dTable.addRow(fila);
                     }
                 }
@@ -295,6 +295,33 @@ public class DatosUsuario {
         return false;
     }
   }
-    
-    
+    public boolean iniciarSesion(String nomUsuario, String contrasena) {
+    try {
+        String archivoXml = "Usuarios.xml";
+        XML datosXml = new XML();
+
+        if (datosXml.ValidarXml(archivoXml)) {
+            Document documento = datosXml.LeerXML(archivoXml);
+            NodeList usuarios = documento.getElementsByTagName("Usuario");
+
+            for (int i = 0; i < usuarios.getLength(); i++) {
+                Node nodo = usuarios.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String nombreUsuario = elemento.getElementsByTagName("NombreUsuario").item(0).getTextContent();
+                    String contra = elemento.getElementsByTagName("Contraseña").item(0).getTextContent();
+
+                    if (nombreUsuario.equalsIgnoreCase(nomUsuario) && contra.equals(contrasena)) {
+                        // Las credenciales son válidas
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // Las credenciales no son válidas
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+    }
 }

@@ -8,13 +8,13 @@ public class Usuario {
     
     String _tipoUsuario;
     String _nombreUsuario;
-    String _contraseña;
+    String _contrasena;
     
-        public Usuario(String nombre, String nomUsuario, String contraseña)
+        public Usuario(String nombre, String nomUsuario, String contrasena)
     {
         this._tipoUsuario= nombre;
         this._nombreUsuario=nomUsuario;
-        this._contraseña=contraseña;
+        this._contrasena=contrasena;
         
     }
     
@@ -34,12 +34,12 @@ public class Usuario {
         this._nombreUsuario = nombreUsuario;
     }
 
-    public String getContraseña() {
-        return _contraseña;
+    public String getContrasena() {
+        return _contrasena;
     }
 
-    public void setContraseña(String contraseña) {
-        this._contraseña = contraseña;
+    public void setContrasena(String contrasena) {
+        this._contrasena = contrasena;
     }
    
     DatosUsuario datosUsuario = new DatosUsuario();
@@ -58,7 +58,7 @@ public class Usuario {
         datosUsuario.validarDuplicadosUsuariosXml(_nombreUsuario, _tipoUsuario, _contrasena);
     }
     
-    public boolean BuscaarTransaccion(String nom)
+    public boolean BuscarTransaccion(String nom)
     {
         if (datosUsuario.buscarUsuariosPorNombreXml(nom))
         {
@@ -91,5 +91,16 @@ public class Usuario {
     {
         datosUsuario.mostrarContenidoXml();
     }
+    
+    public boolean InicioSesion(String _nombreUsuario,String _contraseña )
+    {
+        if (datosUsuario.iniciarSesion(_nombreUsuario, _contraseña))
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
     
 }
