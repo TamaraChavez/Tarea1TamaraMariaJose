@@ -160,4 +160,136 @@ public class DatosCuenta{
             return null;
         }
     }
+    
+     public boolean buscarCuentaPorIdXml(String numC) {
+        try {
+            String archivoXml = "Cuenta.xml";
+            XML datosXml = new XML();
+            
+            if (datosXml.ValidarXml(archivoXml)) {
+                Document documento = datosXml.LeerXML(archivoXml);
+                NodeList cuentas = documento.getElementsByTagName("Cuenta");
+                
+                for (int i = 0; i < cuentas.getLength(); i++) {
+                    Node nodo = cuentas.item(i);
+                    if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                        Element elemento = (Element) nodo;
+                        String nCuenta = elemento.getElementsByTagName("NumeroCuenta").item(0).getTextContent();
+                        
+                        if (nCuenta.equalsIgnoreCase(numC)) {
+                            // El nombre de usuario existe en el XML
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            // El nombre de usuario no se encontró en el XML
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+        public void mostrarContenidoXml() {
+    String archivoXml = "Cuentas.xml"; // Reemplaza con la ruta correcta de tu archivo XML
+    XML xml= new XML();
+    try {
+        Document documento = xml.LeerXML(archivoXml);
+        if (documento != null) {
+            NodeList cuentas= documento.getElementsByTagName("Cuenta");
+            
+            for (int i = 0; i < cuentas.getLength(); i++) {
+                Node nodo = cuentas.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String num = elemento.getElementsByTagName("NumeroCuenta").item(0).getTextContent();
+                    String tipo = elemento.getElementsByTagName("TipoCuenta").item(0).getTextContent();
+                    String propie = elemento.getElementsByTagName("Propietario").item(0).getTextContent();
+
+                    System.out.println("Cuenta" + (i + 1) + ":");
+                    System.out.println("NumeroCuenta: " + num);
+                    System.out.println("TipoCuenta: " + tipo);
+                    System.out.println("Propietario: " + propie);
+                    System.out.println("-----------------------");
+                }
+            }
+        } else {
+            System.out.println("El archivo XML no pudo ser leído o no existe.");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+  }
+        
+    
+    public boolean eliminarCuentaPorIdXml(String numC) {
+    try {
+        String archivoXml = "Cuentas.xml";
+        XML datosXml = new XML();
+
+        if (datosXml.ValidarXml(archivoXml)) {
+            Document documento = datosXml.LeerXML(archivoXml);
+            NodeList cuentas = documento.getElementsByTagName("Cuenta");
+
+            for (int i = 0; i < cuentas.getLength(); i++) {
+                Node nodo = cuentas.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String num = elemento.getElementsByTagName("NumeroCuenta").item(0).getTextContent();
+
+                    if (num.equalsIgnoreCase(numC)) {
+                        // Eliminar el nodo del usuario
+                        nodo.getParentNode().removeChild(nodo);
+                        datosXml.GuardarXml(archivoXml, documento);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // No se encontró el usuario para eliminar
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+    
+}
+    
+  public boolean modificarCuentaXml(String numC, String tipoCuenta, String propietario) {
+    try {
+        String archivoXml = "Cuentas.xml";
+        XML datosXml = new XML();
+
+        if (datosXml.ValidarXml(archivoXml)) {
+            Document documento = datosXml.LeerXML(archivoXml);
+            NodeList cuentas = documento.getElementsByTagName("Cuenta");
+
+            for (int i = 0; i < cuentas.getLength(); i++) {
+                Node nodo = cuentas.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String num = elemento.getElementsByTagName("NumeroCuenta").item(0).getTextContent();
+
+                    if (num.equalsIgnoreCase(numC)) {
+                        // Modificar los datos del usuario
+                        Element tipoElement = (Element) elemento.getElementsByTagName("TipoCuenta").item(0);
+                       tipoElement.setTextContent(tipoCuenta);
+
+                        Element propieElement = (Element) elemento.getElementsByTagName("Propietario").item(0);
+                        propieElement.setTextContent(propietario);
+
+                        datosXml.GuardarXml(archivoXml, documento);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // No se encontró el usuario para modificar
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+  }
+    
+    
 }

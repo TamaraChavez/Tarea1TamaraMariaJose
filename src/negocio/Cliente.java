@@ -56,25 +56,64 @@ public class Cliente {
     }
     
 
-    public void agregarClientes() 
-    {
-       datosClientes.agregarClientesXml(_identificacion, _nombre, _telefono);
-    }
+//metodos
     public void agregarClientesC(String _identificacion, String _nombre, String _telefono) 
     {
        datosClientes.agregarClientesXml(_identificacion, _nombre, _telefono);
     }
-   public void leerClientes()
-   {
+    public void leerClientes()
+    {
        datosClientes.leerClientesXml();
-   }
+    }
    
-    public void ValidarDuplicados()
+    public boolean ValidarDuplicadosCliente(String _identificacion, String _nombre, String _telefono)
+    {
+        if (datosClientes.validarDuplicadosClientes(_nombre, _nombre, _telefono))
+        {
+            return false;
+             //no puede agregar
+        }else{
+                 
+                 datosClientes.agregarClientesXml(_identificacion, _nombre, _telefono);
+                 return false;
+                 //puede agregar
+        }
+    }
+
+    public void ValidarDuplicado(String _identificacion, String _nombre, String _telefono)
     {
         datosClientes.validarDuplicadosClientes(_nombre, _nombre, _telefono);
     }
+    public boolean BuscarId(String id)
+    {
+        if (datosClientes.buscarClientePorIdXml( id))
+        {
+             //existe
+           return true;
+        }else{
+            //no existe
+            return false;
+        }
+     
+    }
+     
+    public void BorrarCliente(String id)
+    {
+        datosClientes.eliminarClientePorIdXml(id);
+     
+    }
+    public void MostrarCliente()
+    {
+        datosClientes.mostrarContenidoXml();
+    }
     
     
+    public void ModificarCliente(String id, String _nombre, String _telefono)
+    {
+     datosClientes.modificarClienteXml(id, _nombre, _telefono);
+    }
+    
+
     
 }
     

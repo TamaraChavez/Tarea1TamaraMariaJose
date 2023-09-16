@@ -43,20 +43,52 @@ public class Cuenta {
     }
 
     
-    public void agregarCuenta() {
-       
-        datosCuenta.agregarCuentaXml(_numCuenta, _tipoCuenta, _propietario);
-    }
-    public void agregarCuentaC(String numCuenta, String tipoCuenta, String propietario) {
-        
+    //metodos
+    public void agregarCuentaC(String numCuenta, String tipoCuenta, String propietario) 
+    {
         datosCuenta.agregarCuentaXml(numCuenta, tipoCuenta, propietario);
     }
     public void LeerCuentas()
     {
         datosCuenta.leerCuentasXml();
     }
-    public void ValidarDuplicados()
+    public void ValidarDuplicados(String numCuenta, String tipoCuenta, String propietario)
     {
-        datosCuenta.validarDuplicadosCuentaXml(_numCuenta, _tipoCuenta, _propietario);
+        datosCuenta.validarDuplicadosCuentaXml(numCuenta, tipoCuenta, propietario);
+    }
+    public boolean ValidarDuplicadosCuenta(String _identificacion, String _nombre, String _telefono)
+    {
+        if (datosCuenta.validarDuplicadosCuentaXml(_nombre, _nombre, _telefono))
+        {
+            return false;
+            //no puede agregar
+                   
+        }else{
+            datosCuenta.agregarCuentaXml(_identificacion, _nombre, _telefono);
+            //si pude agregar
+            return true;
+        }
+    }
+    public boolean BuscarId(String id)
+    {
+        if (datosCuenta.buscarCuentaPorIdXml( id))
+        {
+            //existe
+            return true;
+         }else{
+             //no existe
+            return false; 
+         }
+     
+     }
+    
+    public void BorrarCuenta(String numCuenta)
+    {
+        datosCuenta.eliminarCuentaPorIdXml(numCuenta);
+    }
+    
+    public void ModificarCuenta(String numCuenta, String tipoCuenta, String propietario)
+    {
+        datosCuenta.modificarCuentaXml(numCuenta, tipoCuenta, propietario);
     }
 }

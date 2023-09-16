@@ -43,19 +43,53 @@ public class Usuario {
     }
    
     DatosUsuario datosUsuario = new DatosUsuario();
-
-    public void agregarUsuario() {
-       
-        datosUsuario.AgregarUsuariosXml(_nombreUsuario, _tipoUsuario, _contraseña);
+    //metodos
+    public void agregarUsuario(String _nombreUsuario, String _tipoUsuario,String _contrasena) 
+    {
+        datosUsuario.AgregarUsuariosXml(_nombreUsuario, _tipoUsuario, _contrasena);
     }
 
-    public void LeerCuentas()
+    public void LeerUsuarios()
     {
         datosUsuario.leerUsuariosXml();
     }
-    public void ValidarDuplicados()
+    public void ValidarDuplicados(String _nombreUsuario, String _tipoUsuario,String _contrasena)
     {
-        datosUsuario.validarDuplicadosUsuariosXml(_nombreUsuario, _tipoUsuario, _contraseña);
+        datosUsuario.validarDuplicadosUsuariosXml(_nombreUsuario, _tipoUsuario, _contrasena);
+    }
+    
+    public boolean BuscaarTransaccion(String nom)
+    {
+        if (datosUsuario.buscarUsuariosPorNombreXml(nom))
+        {
+          return true; 
+        }else{
+            return false;
+        }
+    }
+        
+        public boolean ValidarDuplicadosUsuarios(String _nombreUsuario, String _tipoUsuario, String _contrasena)
+        {
+            if (datosUsuario.validarDuplicadosUsuariosXml(_nombreUsuario, _tipoUsuario, _contrasena))
+            {
+                return false;
+            }else{
+                datosUsuario.AgregarUsuariosXml(_nombreUsuario, _tipoUsuario, _contrasena);
+                return true;
+            }
+        }
+    public void borrarUsuario(String nom)
+    {
+        datosUsuario.eliminarUsuarioPorNombreXml(nom);
+    }
+    public void modificarUsuario(String _nombreUsuario, String _tipoUsuario, String _contrasena)
+    {
+        datosUsuario.modificarUsuarioXml(_nombreUsuario, _tipoUsuario, _contrasena);
+    }
+    
+    public void MostrarUsuarios()
+    {
+        datosUsuario.mostrarContenidoXml();
     }
     
 }

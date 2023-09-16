@@ -12,7 +12,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 public class DatosUsuario {
     
-    public void AgregarUsuariosXml(String nomUsuario, String tipoUsuario, String contraseña)
+    public void AgregarUsuariosXml(String nomUsuario, String tipoUsuario, String contrasena)
     {
       
         try
@@ -36,7 +36,7 @@ public class DatosUsuario {
                     usuario.appendChild(nodoTipoUsuario);
                         
                     Element nodoContrasena = documento.createElement("Contraseña");
-                    nodoContrasena.appendChild(documento.createTextNode(contraseña));
+                    nodoContrasena.appendChild(documento.createTextNode(contrasena));
                    usuario.appendChild(nodoContrasena);
                         
                     NodeList usuarios= documento.getElementsByTagName("Usuarios");
@@ -67,7 +67,7 @@ public class DatosUsuario {
                       
                     
                     Element nodoContrasena= documento.createElement("Contraseña");
-                    nodoContrasena.appendChild(documento.createTextNode(contraseña));
+                    nodoContrasena.appendChild(documento.createTextNode(contrasena));
                     usuario.appendChild(nodoContrasena);
             
                     usuarios.appendChild(usuario);
@@ -114,7 +114,7 @@ public class DatosUsuario {
         }   
     }
     
-    public boolean validarDuplicadosUsuariosXml(String nomUsuario, String tipoUsuario, String contraseña) 
+    public boolean validarDuplicadosUsuariosXml(String nomUsuario, String tipoUsuario, String contrasena) 
     {
         try 
         {
@@ -128,13 +128,13 @@ public class DatosUsuario {
                     Node nodo = listaXml.item(i);
                     if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                         Element elemento = (Element) nodo;
-                        String noUsuario = elemento.getElementsByTagName("NombreUsuarios").item(0).getTextContent();
+                        String noUsuario = elemento.getElementsByTagName("NombreUsuario").item(0).getTextContent();
                         String tipUsuario = elemento.getElementsByTagName("TipoUsuario").item(0).getTextContent();
-                        String contrasena = elemento.getElementsByTagName("Cotraseña").item(0).getTextContent();
+                        String contra= elemento.getElementsByTagName("Contraseña").item(0).getTextContent();
 
                         if (noUsuario.equals(nomUsuario) ||
                             tipUsuario.equals(tipoUsuario) ||    
-                            contrasena.equals(contraseña)) {
+                            contra.equals(contrasena)) {
                             return false;
                         }
                     }
@@ -163,5 +163,138 @@ public class DatosUsuario {
         }
           
         
-    }   
+    }  
+    
+    
+         public boolean buscarUsuariosPorNombreXml(String nombre) {
+        try {
+            String archivoXml = "Usuarios.xml";
+            XML datosXml = new XML();
+            
+            if (datosXml.ValidarXml(archivoXml)) {
+                Document documento = datosXml.LeerXML(archivoXml);
+                NodeList usuarios = documento.getElementsByTagName("Usuario");
+                
+                for (int i = 0; i < usuarios.getLength(); i++) {
+                    Node nodo = usuarios.item(i);
+                    if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                        Element elemento = (Element) nodo;
+                        String nombr = elemento.getElementsByTagName("NombreUsuario").item(0).getTextContent();
+                        
+                        if (nombr.equalsIgnoreCase(nombre)) {
+                            // El nombre de usuario existe en el XML
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            // El nombre de usuario no se encontró en el XML
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+        public void mostrarContenidoXml() {
+    String archivoXml = "Usuarios.xml"; // Reemplaza con la ruta correcta de tu archivo XML
+    XML xml= new XML();
+    try {
+        Document documento = xml.LeerXML(archivoXml);
+        if (documento != null) {
+            NodeList usuarios= documento.getElementsByTagName("Usuario");
+            
+            for (int i = 0; i < usuarios.getLength(); i++) {
+                Node nodo = usuarios.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String nom = elemento.getElementsByTagName("NombreUsuario").item(0).getTextContent();
+                    String tipo = elemento.getElementsByTagName("TipoUsuario").item(0).getTextContent();
+                    String contrasena = elemento.getElementsByTagName("Contraseña").item(0).getTextContent();
+
+                    System.out.println("Usuario" + (i + 1) + ":");
+                    System.out.println("NombreUsuario: " + nom);
+                    System.out.println("TipoUsuario: " + tipo);
+                    System.out.println("Contraseña: " + contrasena);
+                    System.out.println("-----------------------");
+                }
+            }
+        } else {
+            System.out.println("El archivo XML no pudo ser leído o no existe.");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+  }
+        
+    
+    public boolean eliminarUsuarioPorNombreXml(String nombre) {
+    try {
+        String archivoXml = "Usuarios.xml";
+        XML datosXml = new XML();
+
+        if (datosXml.ValidarXml(archivoXml)) {
+            Document documento = datosXml.LeerXML(archivoXml);
+            NodeList usuarios = documento.getElementsByTagName("Usuario");
+
+            for (int i = 0; i < usuarios.getLength(); i++) {
+                Node nodo = usuarios.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String nom = elemento.getElementsByTagName("NombreUsuario").item(0).getTextContent();
+
+                    if (nom.equalsIgnoreCase(nombre)) {
+                        // Eliminar el nodo del usuario
+                        nodo.getParentNode().removeChild(nodo);
+                        datosXml.GuardarXml(archivoXml, documento);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // No se encontró el usuario para eliminar
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+    
+}
+    
+  public boolean modificarUsuarioXml(String nomUsuario, String tipoUsuario, String contrasena) {
+    try {
+        String archivoXml = "Usuarios.xml";
+        XML datosXml = new XML();
+
+        if (datosXml.ValidarXml(archivoXml)) {
+            Document documento = datosXml.LeerXML(archivoXml);
+            NodeList usuarios = documento.getElementsByTagName("Usuario");
+
+            for (int i = 0; i < usuarios.getLength(); i++) {
+                Node nodo = usuarios.item(i);
+                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elemento = (Element) nodo;
+                    String nom = elemento.getElementsByTagName("NombreUsuario").item(0).getTextContent();
+
+                    if (nom.equalsIgnoreCase(nomUsuario)) {
+                        // Modificar los datos del usuario
+                        Element tipoElement = (Element) elemento.getElementsByTagName("TipoUsuario").item(0);
+                       tipoElement.setTextContent(tipoUsuario);
+
+                        Element contElement = (Element) elemento.getElementsByTagName("Contraseña").item(0);
+                        contElement.setTextContent(contrasena);
+
+                        datosXml.GuardarXml(archivoXml, documento);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // No se encontró el usuario para modificar
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+  }
+    
+    
 }
