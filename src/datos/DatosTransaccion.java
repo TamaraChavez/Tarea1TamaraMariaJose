@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 
 public class DatosTransaccion {
  
-    public void agregarTransaccionXml(String numTransaccion, String tipoTransaccion, String numCuenta, String monto) 
+    public void agregarTransaccionXml(String numTransaccion, String tipoTransaccion, String numCuenta, String saldo) 
     {
         try {
                 String archivoXml = "Transacciones.xml";
@@ -37,8 +37,8 @@ public class DatosTransaccion {
                     nodoNumCuenta.appendChild(documento.createTextNode(numCuenta));
                     transaccion.appendChild(nodoNumCuenta);
                         
-                     Element nodoMonto = documento.createElement("Monto");
-                    nodoMonto.appendChild(documento.createTextNode(monto));
+                     Element nodoMonto = documento.createElement("Saldo");
+                    nodoMonto.appendChild(documento.createTextNode(saldo));
                     transaccion.appendChild(nodoMonto);
                     
                     NodeList cuentas= documento.getElementsByTagName("Cuentas");
@@ -71,8 +71,8 @@ public class DatosTransaccion {
                     nodoNumCuenta.appendChild(documento.createTextNode(numCuenta));
                     transaccion.appendChild(nodoNumCuenta);
                     
-                    Element nodoMonto = documento.createElement("Monto");
-                    nodoMonto.appendChild(documento.createTextNode(monto));
+                    Element nodoMonto = documento.createElement("Saldo");
+                    nodoMonto.appendChild(documento.createTextNode(saldo));
                     transaccion.appendChild(nodoMonto);
                     
                     transacciones.appendChild(transaccion);
@@ -105,7 +105,7 @@ public class DatosTransaccion {
                         String numTransaccion = elemento.getElementsByTagName("NumeroTransaccion").item(0).getTextContent();
                         String tipoTransaccion = elemento.getElementsByTagName("TipoTransaccion").item(0).getTextContent();
                         String numCuenta= elemento.getElementsByTagName("NumeroCuenta").item(0).getTextContent();
-                        String monto= elemento.getElementsByTagName("Monto").item(0).getTextContent();
+                        String monto= elemento.getElementsByTagName("Saldo").item(0).getTextContent();
                         Object[] fila = {numTransaccion, tipoTransaccion, numCuenta, monto };
                         dTable.addRow(fila);
                     }
@@ -119,7 +119,7 @@ public class DatosTransaccion {
         }   
     }
     
-    public boolean validarDuplicadosTransaccionesXml(String numTransaccion, String tipoTransaccion, String numCuenta, String monto) 
+    public boolean validarDuplicadosTransaccionesXml(String numTransaccion, String tipoTransaccion, String numCuenta, String saldo) 
     {
         try 
         {
@@ -136,11 +136,11 @@ public class DatosTransaccion {
                         String num = elemento.getElementsByTagName("NumeroTrnsaccion").item(0).getTextContent();
                         String tipo = elemento.getElementsByTagName("TipoTransaccion").item(0).getTextContent();
                         String numC = elemento.getElementsByTagName("NumeroCuenta").item(0).getTextContent();
-                        String mont = elemento.getElementsByTagName("Monto").item(0).getTextContent();
+                        String mont = elemento.getElementsByTagName("Saldo").item(0).getTextContent();
                         if (num.equals(numTransaccion) ||
                             tipo.equals(tipoTransaccion) ||   
                             numC.equals(numCuenta) || 
-                           mont.equals(monto)) {
+                           mont.equals(saldo)) {
                             
                             return false;
                         }
@@ -162,7 +162,7 @@ public class DatosTransaccion {
             dTable.addColumn("NumeroTransaccion");
             dTable.addColumn("TipoTransaccion");
             dTable.addColumn("NumeroCuenta");
-            dTable.addColumn("Monto");
+            dTable.addColumn("Saldo");
             return dTable;
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,12 +220,12 @@ public class DatosTransaccion {
                     String num = elemento.getElementsByTagName("NumeroTrnsaccion").item(0).getTextContent();
                     String tipo = elemento.getElementsByTagName("TipoTransaccion").item(0).getTextContent();
                     String numC = elemento.getElementsByTagName("NumeroCuenta").item(0).getTextContent();
-                    String mont = elemento.getElementsByTagName("Monto").item(0).getTextContent();
+                    String mont = elemento.getElementsByTagName("Saldo").item(0).getTextContent();
                     System.out.println("Transaccion" + (i + 1) + ":");
                     System.out.println("NumeroTransaccion: " + num);
                     System.out.println("TipoTransaccion: " + tipo);
                     System.out.println("NumCuenta: " + numC);
-                    System.out.println("Monto: " + mont);
+                    System.out.println("Saldo: " + mont);
                     System.out.println("-----------------------");
                 }
             }
@@ -267,7 +267,7 @@ public class DatosTransaccion {
     }
     
 }
-      public boolean modificarTransaccionXml(String numTransaccion, String tipoTransaccion, String numCuenta, String monto) {
+      public boolean modificarTransaccionXml(String numTransaccion, String tipoTransaccion, String numCuenta, String saldo) {
     try {
         String archivoXml = "Transacciones.xml";
         XML datosXml = new XML();
@@ -290,8 +290,8 @@ public class DatosTransaccion {
                         Element numCElement = (Element) elemento.getElementsByTagName("NumeroCuenta").item(0);
                         numCElement.setTextContent(numCuenta);
                         
-                        Element montoElement = (Element) elemento.getElementsByTagName("Monto").item(0);
-                        montoElement.setTextContent(monto);
+                        Element montoElement = (Element) elemento.getElementsByTagName("Saldo").item(0);
+                        montoElement.setTextContent(saldo);
                         datosXml.GuardarXml(archivoXml, documento);
                         return true;
                     }
@@ -305,4 +305,38 @@ public class DatosTransaccion {
     }
   }
     
+
+    public boolean actualizarSaldo(String numeroTransaccion, String nuevoSaldo) {
+        try {
+            XML datosXml = new XML();
+            String archivoXml = "Transacciones.xml";
+            if (datosXml.ValidarXml(archivoXml)) {
+                Document documento = datosXml.LeerXML(archivoXml);
+                NodeList cuentas = documento.getElementsByTagName("Transaccion");
+
+                for (int i = 0; i < cuentas.getLength(); i++) {
+                    Node nodo = cuentas.item(i);
+                    if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                        Element elemento = (Element) nodo;
+                        String numero = elemento.getElementsByTagName("NumeroTransaccion").item(0).getTextContent();
+
+                        if (numero.equals(numeroTransaccion)) {
+                            // Encontramos la transaccion de la cuenta
+                            Element saldoElement = (Element) elemento.getElementsByTagName("Saldo").item(0);
+                            saldoElement.setTextContent(nuevoSaldo);
+
+                            datosXml.GuardarXml(archivoXml, documento);
+                            return true; 
+                        }
+                    }
+                }
+            }
+            return false; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+      
 }

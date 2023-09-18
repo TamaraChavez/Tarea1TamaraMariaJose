@@ -10,13 +10,16 @@ public class Transaccion {
     String numTransaccion;
     String _tipoTransaccion;
     String _numCuenta;
-    String _monto;
+    String _saldo;
     
-    public Transaccion(String numTransaccion, String _tipoTransaccion, String _numCuenta, String _monto) {
+    public Transaccion(String saldoInicial) {
+        this._saldo = saldoInicial;
+    }
+    public Transaccion(String numTransaccion, String _tipoTransaccion, String _numCuenta, String _saldo) {
         this.numTransaccion = numTransaccion;
         this._tipoTransaccion = _tipoTransaccion;
         this._numCuenta = _numCuenta;
-        this._monto = _monto;
+        this._saldo = _saldo;
     }
    
 
@@ -45,42 +48,42 @@ public class Transaccion {
     }
 
     public String getMonto() {
-        return _monto;
+        return _saldo;
     }
 
     public void setMonto(String _monto) {
-        this._monto = _monto;
+        this._saldo = _monto;
     }
     DatosTransaccion datosT = new DatosTransaccion();
 //metodos
     
-    public void agregarTransaccion(String numT, String tipoT, String numC, String monto) 
+    public void agregarTransaccion(String numT, String tipoT, String numC, String saldo) 
     {
-       datosT.agregarTransaccionXml(numT, tipoT, numC, monto);
+       datosT.agregarTransaccionXml(numT, tipoT, numC, saldo);
     }
    public void leerClientes()
    {
        datosT.leerTransaccionesXml();
    }
    
-public boolean ValidarDuplicadosC(String numT, String tipoT, String numC, String monto)
+public boolean ValidarDuplicadosC(String numT, String tipoT, String numC, String saldo)
     {
-        if (datosT.validarDuplicadosTransaccionesXml(numT, tipoT, numC, monto))
+        if (datosT.validarDuplicadosTransaccionesXml(numT, tipoT, numC, saldo))
                 {
                    return false;
                    //no puede agregar
                 }else 
                 {
-                 datosT.agregarTransaccionXml(numT, tipoT, numC, monto);
+                 datosT.agregarTransaccionXml(numT, tipoT, numC, saldo);
                  return true;
                  //si puede agregar
                  
                 }
     }
 
-    public void ValidarDuplicado(String numT, String tipoT, String numC, String monto)
+    public void ValidarDuplicado(String numT, String tipoT, String numC, String saldo)
     {
-        datosT.validarDuplicadosTransaccionesXml( numT,  tipoT, numC,  monto);
+        datosT.validarDuplicadosTransaccionesXml( numT,  tipoT, numC,  saldo);
     }
         
     public boolean BuscarTransaccion(String num)
@@ -105,11 +108,57 @@ public boolean ValidarDuplicadosC(String numT, String tipoT, String numC, String
     }
     
     
-    public void ModificarTransaccion(String numT, String tipoT, String numC, String monto)
+    public void ModificarTransaccion(String numT, String tipoT, String numC, String saldo)
     {
-        datosT.modificarTransaccionXml(numT, tipoT, numC, monto);
+        datosT.modificarTransaccionXml(numT, tipoT, numC, saldo);
     }
     
+    public void Depositar(Double monto)
+    {
+       Double saldoD=Double.valueOf(_saldo);
+       saldoD+=monto;
+       _saldo= saldoD.toString();
+       ActualizarSaldo();
+    }
     
-    
+    public boolean Retirar(Double monto)
+    {
+        Double saldoD=Double.valueOf(_saldo);
+        
+       if (monto>=saldoD)
+       {
+           saldoD-= monto;
+           _saldo= saldoD.toString();
+           ActualizarSaldo();
+           return true;
+       }
+       return false;
+    }
+  
+    public void ActualizarSaldo()
+    {
+        datosT.actualizarSaldo(numTransaccion, _saldo);
+    }
+    public boolean realizarTraslado(double monto, Transaccion cuentaDestino) {
+        Double saldoD=Double.valueOf(_saldo);
+        if (monto <= 0) {
+            System.out.println("El monto debe ser mayor que cero.");
+            return false;
+        }
+
+        if (saldoD < monto) {
+            System.out.println("Saldo insuficiente.");
+            return false;
+        }
+
+        
+        saldoD -= monto;
+        _saldo= saldoD.toString();
+        cuentaDestino.Depositar(monto);
+
+ 
+        ActualizarSaldo();
+
+        return true;
+    }
 }
